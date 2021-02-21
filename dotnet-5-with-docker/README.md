@@ -42,7 +42,7 @@ ls /tmp/dotnet-5-docker/api
 
 cd /tmp/dotnet-5-docker
 
-curl -o Dockerfile ...
+curl -o Dockerfile https://raw.githubusercontent.com/sixeyed/blog/master/dotnet-5-with-docker/Dockerfile
 
 docker build -t dotnet-api:5.0 .
 ```
