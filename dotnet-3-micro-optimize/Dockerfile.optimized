@@ -1,0 +1,23 @@
+# builder
+FROM mcr.microsoft.com/dotnet/sdk:3.1-alpine as build
+
+WORKDIR /src
+COPY ./src/api/api.csproj .
+RUN dotnet restore
+
+COPY ./src/api/ .
+RUN dotnet publish -c Release -o /out
+
+# split the output to better use the cache 
+RUN mkdir -p /out/api-out && \
+    mv /out/api.* /out/api-out/ && \
+    mv /out/*.json /out/api-out/
+
+# app
+FROM mcr.microsoft.com/dotnet/aspnet:3.1-alpine
+
+ENTRYPOINT ["dotnet", "/app/api.dll"]
+WORKDIR /app
+
+COPY --from=build /out/ /app
+COPY --from=build /out/api-out/ /app
